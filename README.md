@@ -1,7 +1,11 @@
 # Java-Workplace
+
 Hi! I am kinda new with java but still have made a pretty strong grasp of the subject.
+
 So, before you continue I want to tell you that two files namely Checker and TicTacToe is still in development while others are pretty early project and from early I mean I started them when I was very new to programming and stuffs so they were kind of hard for me at that time.
+
 Anyway, thanks for checking this out.
+
 
 
 
