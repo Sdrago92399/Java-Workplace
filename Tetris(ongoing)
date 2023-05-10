@@ -1,0 +1,251 @@
+
+import java.util.*;
+
+ // Compiler version JDK 11.0.2
+
+ class tetris
+ {
+   
+   public static HashMap<String,Integer> input = new HashMap<String,Integer>();
+   static {
+     //input.put("x",5);
+   }
+   
+   public static char[][] boardReset(){
+     char[][] board = new char[20][10];
+     for(int y=0; y<20; y++){
+       for(int x=0; x<10; x++){
+         board[y][x]='▢';
+       }
+     }
+     return board;
+   }
+   
+   public static HashMap<String,Integer> inputs(int x){
+     Scanner sc = new Scanner(System.in);
+     int in = sc.nextInt();
+     /*if(j==0){
+       input.put("x",5);
+     }*/
+     if(in==4){
+       x--;input.put("x",x);
+     }
+     else if(in==6){
+       x++;input.put("x",x);
+     }
+     
+     return input;
+   }
+   
+   public static char[][] boardReplace(char[][] boardmem){
+     char[][] board = new char[20][10];
+     for(int y=0; y<20; y++){
+       for(int x=0; x<10; x++){
+         board[y][x]=boardmem[y][x];
+       }
+     }
+     return board;
+   }
+   
+   public static HashMap<Integer,Integer> baseUpdate(int x,int y,int dec,HashMap<Integer,Integer> base){
+     switch(dec){
+           case 0:
+             base.put(x,y-1); //z
+             base.put(x-1,y-2);
+             base.put(x-2,y-2);
+             break;
+           case 1:
+             base.put(x,y-2); //square
+             base.put(x-1,y-2);
+             break;
+           case 2:
+             base.put(x,y-2); //tee
+             base.put(x-1,y-2);
+             base.put(x+1,y-2);
+             break;
+           case 3:
+             base.put(x,y-4); //line
+             break;
+           case 4:
+             base.put(x,y-3); //L
+             base.put(x+1,y-1);
+             break;
+           case 5:
+             base.put(x,y-3); //J
+             base.put(x-1,y-1);
+             break;
+           default:
+         }
+     
+     return base;
+   }
+   
+   public static char[][] square(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>0&y<20&x>-1&x<10){
+       board[y-1][x]='■';
+     }
+     if(y>-1&y<20&x>0&x<10){
+       board[y][x-1]='■';
+     }
+     if(y>0&y<20&x>0&x<10){
+       board[y-1][x-1]='■';
+     }
+     return board;
+   }
+   
+   public static char[][] tee(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>0&y<20&x>-1&x<10){
+       board[y-1][x]='■';
+     }
+     if(y>0&y<20&x>0&x<10){
+       board[y-1][x-1]='■';
+     }
+     if(y>0&y<20&x>-2&x<10){
+       board[y-1][x+1]='■';
+     }
+     return board;
+   }
+   
+   public static char[][] J(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>0&y<20&x>-1&x<10){
+       board[y-1][x]='■';
+     }
+     if(y>-1&y<20&x>0&x<10){
+       board[y][x-1]='■';
+     }
+     if(y>1&y<20&x>-1&x<10){
+       board[y-2][x]='■';
+     }System.out.println("yee");
+     return board;
+   }
+   
+   public static char[][] L(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>0&y<20&x>-1&x<10){
+       board[y-1][x]='■';
+     }
+     if(y>-1&y<20&x>0&x<10){
+       board[y][x+1]='■';
+     }
+     if(y>1&y<20&x>-1&x<10){
+       board[y-2][x]='■';
+     }
+     return board;
+   }
+   
+   public static char[][] z(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>-1&y<20&x>0&x<10){
+       board[y][x-1]='■';
+     }
+     if(y>0&y<20&x>0&x<10){
+       board[y-1][x-1]='■';
+     }
+     if(y>0&y<20&x>1&x<10){
+       board[y-1][x-2]='■';
+     }
+     return board;
+   }
+   
+   public static char[][] line(int x, int y, char[][] board){
+     if(y>-1&y<20&x>-1&x<10){
+       board[y][x]='■';
+     }
+     if(y>0&y<20&x>-1&x<10){
+       board[y-1][x]='■';
+     }
+     if(y>1&y<20&x>-1&x<10){
+       board[y-2][x]='■';
+     }
+     if(y>2&y<20&x>-1&x<10){
+       board[y-3][x]='■';
+     }
+     return board;
+   }
+   
+   public static void main(String args[])
+   {
+     char[][] board = boardReset();
+     char[][] boardmem = boardReplace(board);
+     
+     Scanner sc = new Scanner(System.in);
+     
+     HashMap<Integer,Integer> base = new HashMap<Integer,Integer>();
+     
+     for(int j = 0; j<10; j++){
+       base.put(j,20);
+     }
+     
+     while(true){
+       input.put("x",5);
+       
+       // Create a new thread to read inputs from the console
+    Thread inputThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while(true){
+          input = inputs(input.get("x"));
+        }
+      }
+    });
+   
+    // Start the input thread
+    inputThread.start();
+    
+       int y = 0,x = input.get("x");
+       Random rand = new Random();
+       int dec = rand.nextInt(6);
+       for(y=0; y<base.get(x); y++){
+         x = input.get("x");
+         switch(dec){
+           case 0:
+             board = z(x,y,board);
+             break;
+           case 1:
+             board = square(x,y,board);
+             break;
+           case 2:
+             board = tee(x,y,board);
+             break;
+           case 3:
+             board = line(x,y,board);
+             break;
+           case 4:
+             board = L(x,y,board);
+             break;
+           case 5:
+             board = J(x,y,board);
+             break;
+           default:
+         }
+         
+         for(int i = 0; i<20; i++){
+           System.out.println("");
+         }
+         for(char[] xout : board){
+           for(char yout : xout){
+             System.out.print(yout+" ");
+           }
+           System.out.println();
+         }
+         try{Thread.sleep(500);}catch(InterruptedException e){System.out.println(e);}
+         board = (y<base.get(x)-1?boardReplace(boardmem):board);
+       }
+       boardmem = boardReplace(board);
+       base = baseUpdate(x,y,dec,base);
+     }
+   }
+ }
